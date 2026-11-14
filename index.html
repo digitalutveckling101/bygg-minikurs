@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F5EFE2" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<title>Bygg en minikurs med Claude Code</title>
+<meta name="description" content="Gratis mini-kurs på svenska om hur du bygger egna minikurser med Claude Code: skillen som recept, brandfilen, faktakoll, egen grafik i kod, publicering och en avslutning som leder vidare." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Bygg en minikurs med Claude Code" />
+<meta property="og:description" content="Gratis mini-kurs på svenska om hur du bygger egna minikurser med Claude Code: skillen som recept, brandfilen, faktakoll, egen grafik i kod, publicering och en avslutning som leder vidare." />
+<meta property="og:locale" content="sv_SE" />
+<meta property="og:url" content="https://bygg-minikurs.vibecodingsverige.se/" />
+<meta property="og:image" content="https://bygg-minikurs.vibecodingsverige.se/bilder/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Bygg en minikurs med Claude Code. Gratis mini-kurs på svenska." />
+<link rel="canonical" href="https://bygg-minikurs.vibecodingsverige.se/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Bygg en minikurs med Claude Code" />
+<meta name="twitter:image" content="https://bygg-minikurs.vibecodingsverige.se/bilder/og.jpg" />
+<meta name="twitter:description" content="Gratis mini-kurs på svenska om hur du bygger egna minikurser med Claude Code: skillen som recept, brandfilen, faktakoll, egen grafik i kod, publicering och en avslutning som leder vidare." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream-50:  #FBF8F1;
+    --cream-100: #F5EFE2;
+    --cream-200: #ECE3CE;
+    --cream-300: #DED0AE;
+    --ink-900:   #1A1713;
+    --ink-800:   #2A2520;
+    --ink-700:   #3D362E;
+    --ink-500:   #6B5F52;
+    --ink-400:   #8A7D6E;
+    --ink-300:   #B8AD9E;
+    --ink-200:   #D9D0BE;
+    --amber-700: #A25B2A;
+    --amber-600: #C66A2E;
+    --amber-500: #D97742;
+    --amber-400: #E69068;
+    --amber-100: #F5D7BF;
+    --amber-50:  #FBEEE1;
+    --plum-700:  #3B1D1A;
+
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans:  "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --mono:  "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+
+    --shadow-sm: 0 1px 2px rgba(26,23,19,0.06), 0 1px 1px rgba(26,23,19,0.04);
+    --shadow-md: 0 4px 16px rgba(26,23,19,0.08), 0 2px 4px rgba(26,23,19,0.04);
+    --shadow-lg: 0 20px 60px rgba(26,23,19,0.12), 0 8px 20px rgba(26,23,19,0.06);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--cream-100);
+    color: var(--ink-900);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .serif-italic {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--amber-700);
+  }
+
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .container-narrow { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 720px) {
+    .container, .container-narrow { padding: 0 22px; }
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--amber-600), var(--amber-700));
+    z-index: 1000;
+    transition: width 0.1s ease-out;
+  }
+
+  /* Topbar */
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(245, 239, 226, 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--ink-200);
+    z-index: 100;
+  }
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink-900);
+    text-decoration: none;
+  }
+  .brand-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--amber-600);
+  }
+  .module-nav {
+    display: flex;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .module-nav a {
+    color: var(--ink-500);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: var(--r-sm);
+    transition: all 0.15s ease;
+  }
+  .module-nav a:hover { color: var(--ink-900); background: var(--cream-200); }
+  .module-nav a.active { color: var(--amber-700); background: var(--amber-50); }
+  @media (max-width: 1000px) {
+    .module-nav { display: none; }
+  }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 64px;
+    background: var(--cream-100);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  @media (max-width: 720px) {
+    .hero { padding: 64px 0 48px; }
+  }
+  .badge {
+    display: inline-block;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--amber-700);
+    background: var(--amber-50);
+    padding: 6px 12px;
+    border-radius: var(--r-sm);
+    margin-bottom: 20px;
+  }
+  h1.hero-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(40px, 5.6vw, 68px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    max-width: 900px;
+  }
+  .hero-sub {
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-500);
+    max-width: 640px;
+    margin: 0 0 28px;
+  }
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-500);
+    margin-bottom: 32px;
+  }
+  .hero-meta span { display: flex; align-items: center; }
+  .hero-meta span + span::before {
+    content: "·";
+    margin: 0 14px 0 0;
+    color: var(--ink-300);
+  }
+  .module-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+  .module-tags a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--cream-50);
+    border: 1px solid var(--ink-200);
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-900);
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .module-tags a:hover {
+    border-color: var(--amber-600);
+    background: var(--amber-50);
+    color: var(--amber-700);
+  }
+  .module-tags a .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--amber-700);
+    font-weight: 600;
+  }
+
+  .hero-frame {
+    margin-top: 32px;
+    background: var(--cream-50);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--r-xl);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+    max-width: 900px;
+  }
+  .frame-dotrow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .frame-dotrow span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--ink-300);
+  }
+  .frame-dotrow span:nth-child(1) { background: #E66E5C; }
+  .frame-dotrow span:nth-child(2) { background: #E6B85C; }
+  .frame-dotrow span:nth-child(3) { background: #82C788; }
+  .frame-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (max-width: 720px) {
+    .frame-content { grid-template-columns: 1fr; }
+  }
+  .frame-files {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-500);
+    line-height: 1.9;
+  }
+  .frame-files .filename { color: var(--ink-400); text-decoration: line-through; }
+  .frame-files .arrow { color: var(--amber-600); font-weight: 600; margin: 0 6px; }
+  .frame-files .new { color: var(--ink-900); font-weight: 500; }
+  .frame-illust {
+    background: var(--cream-100);
+    border-radius: var(--r-lg);
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px solid var(--ink-200);
+  }
+  .frame-illust .num {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 56px;
+    color: var(--amber-600);
+    line-height: 1;
+  }
+  .frame-illust .label {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-500);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .accent-bar {
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--amber-600), var(--amber-700));
+    border-radius: 2px;
+    margin-top: 40px;
+  }
+
+  /* Module sections */
+  .module {
+    padding: 96px 0;
+    background: var(--cream-100);
+    border-top: 1px solid var(--ink-200);
+  }
+  .module.alt { background: var(--cream-200); }
+  @media (max-width: 720px) {
+    .module { padding: 64px 0; }
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--amber-700);
+    margin-bottom: 14px;
+  }
+  .module h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(32px, 4vw, 40px);
+    line-height: 1.15;
+    margin: 0 0 24px;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-700);
+    margin: 0 0 32px;
+  }
+  .module p { color: var(--ink-700); }
+  .module h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.3;
+    margin: 36px 0 14px;
+    color: var(--ink-900);
+  }
+
+  /* Bullet lists with checkmark circles */
+  .check-list {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+  }
+  .check-list li {
+    position: relative;
+    padding-left: 36px;
+    margin-bottom: 14px;
+    line-height: 1.55;
+    color: var(--ink-700);
+  }
+  .check-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--amber-100) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A25B2A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") center/12px no-repeat;
+  }
+
+  /* Callouts */
+  .callout {
+    background: linear-gradient(180deg, var(--amber-50) 0%, var(--cream-50) 100%);
+    border-left: 4px solid var(--amber-600);
+    padding: 24px 28px;
+    border-radius: 0 var(--r-lg) var(--r-lg) 0;
+    margin: 32px 0;
+  }
+  .callout .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--amber-700);
+    margin-bottom: 8px;
+  }
+  .callout p { margin: 0; color: var(--ink-900); }
+
+  .callout.dark {
+    background: var(--ink-900);
+    border-left-color: var(--amber-600);
+    color: var(--cream-100);
+  }
+  .callout.dark .label { color: var(--amber-400); }
+  .callout.dark p { color: var(--cream-100); }
+
+  /* Numbered cards */
+  .qcards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin: 32px 0;
+  }
+  .qcard {
+    background: var(--cream-50);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--r-lg);
+    padding: 24px 22px;
+    transition: all 0.2s ease;
+  }
+  .qcard:hover {
+    border-color: var(--amber-400);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .qcard .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--amber-700);
+    margin-bottom: 10px;
+  }
+  .qcard h4 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    margin: 0 0 8px;
+    color: var(--ink-900);
+  }
+  .qcard p {
+    font-size: 15px;
+    color: var(--ink-500);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Step list */
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0;
+    counter-reset: step;
+  }
+  .step-list li {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-list li::before {
+    counter-increment: step;
+    content: "0" counter(step);
+    flex: 0 0 auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--amber-700);
+    background: var(--amber-50);
+    padding: 4px 10px;
+    border-radius: var(--r-sm);
+    height: fit-content;
+    margin-top: 2px;
+  }
+  .step-list li > div { flex: 1; }
+  .step-list h4 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 0 6px;
+    color: var(--ink-900);
+  }
+  .step-list p {
+    margin: 0;
+    color: var(--ink-700);
+  }
+
+  /* Accordions */
+  details.acc {
+    background: var(--cream-50);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--r-lg);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  details.acc summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 22px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink-900);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  details.acc summary::-webkit-details-marker { display: none; }
+  details.acc summary::after {
+    content: "+";
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--amber-600);
+    transition: transform 0.2s ease;
+  }
+  details.acc[open] summary::after { content: "−"; }
+  details.acc .acc-body {
+    padding: 0 22px 22px;
+    color: var(--ink-700);
+  }
+  details.acc .acc-body p:first-child { margin-top: 0; }
+
+  /* Comparison table */
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    background: var(--cream-50);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid var(--ink-200);
+  }
+  table.compare th, table.compare td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--ink-200);
+    font-size: 15px;
+  }
+  table.compare th {
+    background: var(--cream-200);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-700);
+  }
+  table.compare tr:last-child td { border-bottom: none; }
+  table.compare td.good { color: var(--amber-700); font-weight: 500; }
+  table.compare td.bad  { color: var(--ink-500); }
+
+  /* Before/after panels */
+  .ba {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 32px 0;
+  }
+  @media (max-width: 720px) { .ba { grid-template-columns: 1fr; } }
+  .ba > div {
+    padding: 22px;
+    border-radius: var(--r-lg);
+    border: 1px solid var(--ink-200);
+  }
+  .ba .before { background: var(--cream-50); }
+  .ba .after  { background: var(--amber-50); border-color: var(--amber-100); }
+  .ba .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 8px;
+  }
+  .ba .before .label { color: var(--ink-500); }
+  .ba .after  .label { color: var(--amber-700); }
+  .ba code {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-900);
+    display: block;
+    line-height: 1.7;
+  }
+
+  /* Quiz */
+  .quiz-section {
+    padding: 96px 0;
+    background: var(--cream-200);
+    border-top: 1px solid var(--ink-200);
+  }
+  @media (max-width: 720px) {
+    .quiz-section { padding: 64px 0; }
+  }
+  .quiz {
+    background: var(--cream-50);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--r-xl);
+    padding: 36px;
+    margin-top: 32px;
+    box-shadow: var(--shadow-sm);
+  }
+  @media (max-width: 720px) {
+    .quiz { padding: 24px; }
+  }
+  .qq { margin-bottom: 32px; }
+  .qq:last-child { margin-bottom: 0; }
+  .qq-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--amber-700);
+    margin-bottom: 8px;
+  }
+  .qq h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 18px;
+    color: var(--ink-900);
+  }
+  .qopts { display: flex; flex-direction: column; gap: 10px; }
+  .qopt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--cream-100);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--ink-900);
+    transition: all 0.15s ease;
+    text-align: left;
+    font-family: var(--sans);
+    width: 100%;
+  }
+  .qopt:hover { border-color: var(--amber-600); background: var(--amber-50); }
+  .qopt.correct {
+    background: #E8F1E4;
+    border-color: #82C788;
+    color: #2A4A2C;
+  }
+  .qopt.wrong {
+    background: #F5E1DC;
+    border-color: #D97D6E;
+    color: #6B2A22;
+  }
+  .qopt:disabled { cursor: default; }
+  .qfeedback {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: var(--cream-100);
+    border-left: 3px solid var(--amber-600);
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+    font-size: 14px;
+    color: var(--ink-700);
+    display: none;
+  }
+  .qfeedback.show { display: block; }
+  .quiz-score {
+    margin-top: 32px;
+    padding: 22px;
+    background: var(--ink-900);
+    color: var(--cream-100);
+    border-radius: var(--r-lg);
+    text-align: center;
+    display: none;
+  }
+  .quiz-score.show { display: block; }
+  .quiz-score .num {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 40px;
+    color: var(--amber-400);
+    margin: 0;
+  }
+  .quiz-score p { margin: 6px 0 0; color: var(--cream-100); font-size: 16px; }
+
+  /* End section */
+  .end {
+    background: var(--ink-900);
+    color: var(--cream-100);
+    padding: 96px 0;
+    border-top: 1px solid var(--ink-700);
+  }
+  @media (max-width: 720px) {
+    .end { padding: 64px 0; }
+  }
+  .end .section-label { color: var(--amber-400); }
+  .end h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(32px, 4.4vw, 44px);
+    line-height: 1.15;
+    color: var(--cream-100);
+    margin: 0 0 18px;
+    letter-spacing: -0.01em;
+  }
+  .end .lead { color: var(--ink-300); margin-bottom: 40px; }
+
+  /* Gå vidare: boken + startkit */
+  .next-steps { margin: 0 0 56px; }
+  .next-steps .section-label { margin-bottom: 10px; }
+  .next-steps h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(26px, 3.4vw, 34px);
+    line-height: 1.2;
+    color: var(--cream-100);
+    margin: 0 0 12px;
+  }
+  .next-steps .intro { color: var(--ink-300); font-size: 17px; line-height: 1.55; margin: 0 0 28px; }
+  .offer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .offer-grid { grid-template-columns: 1fr; } }
+  .offer {
+    display: flex; flex-direction: column;
+    background: var(--cream-50); color: var(--ink-900);
+    border-radius: var(--r-xl); padding: 30px 28px;
+    box-shadow: var(--shadow-lg);
+  }
+  .offer.warm { background: var(--amber-50); }
+  .offer .ico {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--amber-100); color: var(--amber-700);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .offer .kicker {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-500); margin: 18px 0 6px;
+  }
+  .offer.warm .kicker { color: var(--amber-700); }
+  .offer h4 {
+    font-family: var(--serif); font-weight: 600; font-size: 23px;
+    line-height: 1.25; margin: 0 0 10px; color: var(--ink-900);
+  }
+  .offer p { flex: 1; font-size: 15px; line-height: 1.6; color: var(--ink-700); margin: 0 0 22px; }
+  .offer .btn { align-self: flex-start; }
+
+  .news-card {
+    background: var(--cream-50);
+    color: var(--ink-900);
+    border-radius: var(--r-xl);
+    padding: 40px 36px;
+    box-shadow: var(--shadow-lg);
+  }
+  @media (max-width: 720px) {
+    .news-card { padding: 28px 24px; }
+  }
+  .news-card .eyebrow {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--amber-700);
+    margin-bottom: 14px;
+  }
+  .news-card h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(24px, 3vw, 30px);
+    line-height: 1.25;
+    margin: 0 0 14px;
+    color: var(--ink-900);
+  }
+  .news-card .desc {
+    font-size: 16px;
+    color: var(--ink-500);
+    margin: 0 0 22px;
+    line-height: 1.55;
+  }
+  .news-card .check-list { margin: 0 0 28px; }
+  .news-card .check-list li { color: var(--ink-700); font-size: 15px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 16px 26px;
+    border-radius: var(--r-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border: none;
+  }
+  .btn-amber {
+    background: var(--amber-600);
+    color: #fff;
+    box-shadow: 0 10px 30px -8px rgba(198,106,46,0.55);
+  }
+  .btn-amber:hover { background: var(--amber-700); }
+  .micro {
+    font-size: 13px;
+    color: var(--ink-500);
+    margin: 14px 0 0;
+  }
+
+  /* Footer */
+  footer {
+    background: var(--cream-200);
+    color: var(--ink-500);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid var(--ink-200);
+  }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---------- tillägg för den här kursen: bildmaterial ---------- */
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 36px; } }
+  .phone {
+    position: relative; width: 100%; max-width: 280px; aspect-ratio: 9 / 16; margin: 0 auto;
+    border: 9px solid var(--ink-900); border-radius: 38px; overflow: hidden;
+    background: var(--ink-900); box-shadow: var(--shadow-md);
+  }
+  .phone video, .phone img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .phone-cap { text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-400); margin-top: 14px; }
+
+  figure.fig { margin: 36px 0; }
+  figure.fig figcaption { font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--ink-500); margin-top: 12px; }
+  figure.fig figcaption strong { color: var(--ink-900); font-weight: 600; }
+  .fig-card { background: var(--cream-50); border: 1px solid var(--ink-200); border-radius: var(--r-lg); padding: 24px; }
+  .module.alt .fig-card { background: var(--cream-100); }
+  .fig-card svg { display: block; width: 100%; height: auto; }
+
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .flow-step { position: relative; background: var(--cream-100); border: 1px solid var(--ink-200); border-radius: var(--r-md); padding: 16px 14px; }
+  .module.alt .flow-step { background: var(--cream-50); }
+  .flow-step .n { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--amber-700); letter-spacing: 0.1em; }
+  .flow-step h4 { font-family: var(--serif); font-weight: 600; font-size: 17px; margin: 6px 0 4px; }
+  .flow-step p { font-size: 13px; line-height: 1.45; color: var(--ink-500); margin: 0; }
+  .flow-step.last { background: var(--ink-900); border-color: var(--ink-900); }
+  .flow-step.last h4 { color: var(--cream-100); }
+  .flow-step.last p { color: var(--ink-300); }
+  .flow-step.last .n { color: var(--amber-400); }
+  @media (max-width: 820px) { .flow { grid-template-columns: 1fr 1fr; } }
+
+  .before-after { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: center; }
+  .before-after .shot { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--ink-200); }
+  .before-after .shot img { display: block; width: 100%; height: auto; }
+  .tagline { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-500); margin: 0 0 8px; }
+  .tagline.amber { color: var(--amber-700); }
+  @media (max-width: 720px) { .before-after { grid-template-columns: 1fr; } }
+
+  .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .gallery.three { grid-template-columns: repeat(3, 1fr); }
+  .gallery .g { margin: 0; }
+  .gallery .g .phone { border-width: 6px; border-radius: 24px; max-width: none; }
+  .gallery .g p { font-size: 12.5px; line-height: 1.4; color: var(--ink-500); margin: 10px 2px 0; }
+  .gallery .g p strong { display: block; color: var(--ink-900); font-weight: 600; font-size: 13px; }
+  @media (max-width: 720px) { .gallery, .gallery.three { grid-template-columns: 1fr 1fr; } }
+
+  .prompt-box { position: relative; background: var(--ink-900); border-radius: var(--r-lg); padding: 26px 26px 22px; margin: 28px 0; }
+  .prompt-box .ph { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .prompt-box .ph span { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber-400); }
+  .prompt-box button { font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink-900); background: var(--cream-100); border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: background 0.15s ease; }
+  .prompt-box button:hover { background: var(--amber-100); }
+  .prompt-box pre { margin: 0; white-space: pre-wrap; font-family: var(--mono); font-size: 13px; line-height: 1.65; color: var(--cream-100); }
+
+  .chat { display: flex; flex-direction: column; gap: 12px; }
+  .chat .msg { max-width: 82%; padding: 14px 18px; border-radius: 18px; font-size: 14.5px; line-height: 1.5; }
+  .chat .you { align-self: flex-end; background: var(--ink-900); color: var(--cream-100); border-bottom-right-radius: 5px; }
+  .chat .ai { align-self: flex-start; background: var(--cream-200); color: var(--ink-900); border-bottom-left-radius: 5px; }
+  .module.alt .chat .ai { background: var(--cream-50); }
+  .chat .who { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; margin-bottom: 4px; }
+  .rule-card { margin-top: 16px; border: 1px dashed var(--amber-600); border-radius: var(--r-md); padding: 16px 18px; background: var(--amber-50); font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink-800); }
+  .rule-card b { color: var(--amber-700); }
+  .qcards.three { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 720px) { .qcards.three { grid-template-columns: 1fr; } }
+  .hero-tools { font-family: var(--sans); font-size: 15px; line-height: 1.55; color: var(--ink-700); background: var(--amber-50); border-left: 3px solid var(--amber-600); border-radius: var(--r-sm); padding: 12px 16px; max-width: 640px; margin: 0 0 28px; }
+  .hero-tools strong { color: var(--ink-900); }
+  .svg-lab { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; }
+  .svg-txt { font-family: "Inter", system-ui, sans-serif; font-size: 13px; }
+
+  /* Hero: användningsmätare */
+  .meter-card {
+    background: var(--ink-900); color: var(--cream-100);
+    border-radius: var(--r-xl); padding: 26px 24px; box-shadow: var(--shadow-lg);
+    font-family: var(--sans);
+  }
+  .mc-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber-400); margin: 0 0 18px; }
+  .mc-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-300); margin: 0 0 6px; }
+  .mc-row span:last-child { font-family: var(--mono); color: var(--cream-100); }
+  .mc-bar { height: 10px; border-radius: 6px; background: var(--ink-700); overflow: hidden; margin: 0 0 18px; }
+  .mc-bar i { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--amber-500), var(--amber-600)); }
+  .mc-bar i.calm { background: var(--amber-400); opacity: 0.75; }
+  .mc-warn { font-size: 13px; line-height: 1.5; color: var(--ink-200); border-left: 3px solid var(--amber-500); padding: 2px 0 2px 12px; margin: 4px 0 18px; }
+  .mc-cmd { font-family: var(--mono); font-size: 14px; background: var(--ink-800); border-radius: 8px; padding: 10px 14px; color: var(--cream-100); }
+  .mc-cmd span { color: var(--amber-400); margin-right: 6px; }
+
+  /* Modul 03: modelltrappa */
+  .model-ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end; }
+  .ml-step { border-radius: 14px; padding: 16px 14px; color: var(--ink-900); display: flex; flex-direction: column; justify-content: flex-end; }
+  .ml-step.s1 { background: var(--cream-200); min-height: 130px; }
+  .ml-step.s2 { background: var(--amber-100); min-height: 165px; }
+  .ml-step.s3 { background: var(--amber-400); min-height: 200px; }
+  .ml-step.s4 { background: var(--amber-600); min-height: 235px; color: #fff; }
+  .ml-name { font-family: var(--serif); font-weight: 600; font-size: 22px; margin: 0 0 4px; }
+  .ml-alias { font-family: var(--mono); font-size: 11.5px; margin: 0 0 8px; opacity: 0.8; }
+  .ml-use { font-size: 13px; line-height: 1.45; margin: 0; }
+  .ml-axis { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-500); margin-top: 14px; border-top: 1px solid var(--ink-200); padding-top: 10px; }
+  @media (max-width: 720px) {
+    .model-ladder { grid-template-columns: 1fr 1fr; }
+    .ml-step { min-height: 0 !important; }
+  }
+
+  /* Modul 04: handoff */
+  .handoff { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: stretch; }
+  .ho-box { border-radius: 14px; padding: 18px 16px; font-size: 14px; line-height: 1.5; }
+  .ho-box p { margin: 0; }
+  .ho-lab { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px !important; }
+  .ho-box.heavy { background: var(--ink-800); color: var(--ink-200); }
+  .fig .ho-box.heavy p { color: var(--ink-200); }
+  .fig .ho-box.doc p, .fig .ho-box.light p { color: var(--ink-700); }
+  .fig .ho-box p.ho-lab { color: var(--amber-700); }
+  .fig .ho-box.heavy p.ho-lab { color: var(--amber-400); }
+  .ho-box.heavy .ho-lab { color: var(--amber-400); }
+  .ho-box.doc { background: var(--amber-50); border: 1px dashed var(--amber-600); color: var(--ink-700); }
+  .ho-box.doc .ho-lab { color: var(--amber-700); }
+  .ho-box.light { background: var(--cream-50); border: 1px solid var(--ink-200); color: var(--ink-700); }
+  .ho-box.light .ho-lab { color: var(--amber-700); }
+  .ho-arrow { align-self: center; font-size: 22px; color: var(--amber-600); }
+  @media (max-width: 720px) {
+    .handoff { grid-template-columns: 1fr; }
+    .ho-arrow { transform: rotate(90deg); justify-self: center; }
+  }
+
+  /* Modul 06: vad som laddas */
+  .load-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 720px) { .load-compare { grid-template-columns: 1fr; } }
+  .lc-lab { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber-700); margin: 0 0 10px; }
+  .lc-item { border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; font-size: 14px; line-height: 1.45; }
+  .lc-item b { display: block; font-family: var(--serif); font-size: 17px; margin-bottom: 2px; }
+  .lc-item span { color: inherit; opacity: 0.85; }
+  .lc-item.always { background: var(--ink-800); color: var(--cream-100); }
+  .lc-item.ondemand { background: var(--cream-50); border: 1px dashed var(--ink-300); color: var(--ink-700); }
+
+  /* Tabeller som kort på mobil */
+  @media (max-width: 720px) {
+    table.compare.stack thead { display: none; }
+    table.compare.stack, table.compare.stack tbody, table.compare.stack tr, table.compare.stack td { display: block; width: 100%; }
+    table.compare.stack tr { border-bottom: 1px solid var(--ink-200); padding: 10px 0; }
+    table.compare.stack td { border: 0; padding: 4px 14px; }
+    table.compare.stack td::before { content: attr(data-label); display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber-700); margin-bottom: 2px; }
+  }
+
+  /* Diagram: läsbara på mobil, svep i sidled */
+  @media (max-width: 720px) {
+    .fig-card:has(> svg) { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .fig-card > svg { min-width: 600px; }
+  }
+
+  /* Fler minikurser: länk till katalogen, sist i .end */
+  .fk-wrap { max-width: 760px; margin: 48px auto 0; padding: 0 22px; }
+  .fk {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    border: 1px solid rgba(230,144,104,0.45); border-radius: var(--r-xl, 24px);
+    padding: 26px 28px; text-align: left;
+  }
+  .fk p.fk-label {
+    font-family: var(--mono, "JetBrains Mono", ui-monospace, monospace);
+    font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--amber-400, #E69068); margin: 0 0 8px;
+  }
+  .fk h3.fk-title {
+    font-family: var(--serif, "Source Serif 4", Georgia, serif);
+    font-weight: 600; font-size: clamp(21px, 2.6vw, 25px); line-height: 1.25;
+    color: var(--cream-100, #F5EFE2); margin: 0 0 6px;
+  }
+  .fk h3.fk-title em { font-style: italic; color: var(--amber-400, #E69068); }
+  .fk p.fk-desc { font-size: 15px; line-height: 1.55; color: var(--ink-300, #B8AD9E); margin: 0; max-width: 440px; }
+  .fk a.fk-btn {
+    display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+    font-family: var(--sans, Inter, system-ui, sans-serif); font-weight: 600; font-size: 15px;
+    color: var(--cream-100, #F5EFE2); text-decoration: none;
+    border: 1px solid var(--cream-100, #F5EFE2); border-radius: 10px; padding: 12px 20px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .fk a.fk-btn:hover { background: var(--cream-100, #F5EFE2); color: var(--ink-900, #1A1713); }
+  /* Hero: skill-mapp */
+  .tree-card { background: var(--ink-900); color: var(--cream-100); border-radius: var(--r-xl); padding: 24px 22px; box-shadow: var(--shadow-lg); font-family: var(--mono); }
+  .tc-title { font-size: 13px; color: var(--amber-400); margin: 0 0 14px; letter-spacing: 0.04em; }
+  .tc-row { display: flex; align-items: baseline; gap: 10px; font-size: 13.5px; padding: 8px 10px; border-radius: 8px; color: var(--ink-200); }
+  .tc-row em { margin-left: auto; font-style: normal; font-family: var(--sans); font-size: 12px; color: var(--ink-400); }
+  .tc-row.hot { background: var(--ink-800); color: var(--cream-100); }
+  .tc-row.hot .tc-ico { color: var(--amber-400); }
+  .tc-row.out { margin-top: 8px; border: 1px dashed var(--amber-600); color: var(--cream-100); }
+  .tc-row.out .tc-ico { color: var(--amber-400); }
+  .tc-ico { width: 14px; color: var(--ink-400); }
+
+  /* Modul 02: skill-karta */
+  .skill-map { display: grid; gap: 14px; }
+  .fig .sm-core { background: var(--amber-600); color: #fff; border-radius: 14px; padding: 18px 20px; }
+  .fig .sm-core p { margin: 0; color: #fff; font-size: 15px; line-height: 1.5; }
+  .fig .sm-core p.sm-lab { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; margin-bottom: 6px; color: var(--amber-50); }
+  .sm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sm-item { background: var(--cream-50); border: 1px solid var(--ink-200); border-radius: 12px; padding: 14px 16px; font-size: 14px; line-height: 1.45; color: var(--ink-700); }
+  .sm-item b { display: block; font-family: var(--mono); font-size: 13px; color: var(--amber-700); margin-bottom: 4px; }
+  @media (max-width: 720px) { .sm-grid { grid-template-columns: 1fr; } }
+
+  /* Modul 03: brandblad */
+  .brand-sheet { background: #fff; border: 1px solid var(--ink-200); border-radius: 14px; padding: 20px; }
+  .fig .bs-head p { margin: 0; }
+  .fig .bs-head p.bs-lab { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--amber-700); }
+  .fig .bs-head p.bs-name { font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--ink-900); margin: 4px 0 16px; }
+  .bs-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  .sw { height: 86px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.06); display: flex; align-items: flex-end; padding: 8px 10px; font-family: var(--mono); font-size: 11px; line-height: 1.35; color: #2F3B34; }
+  .bs-rows div { display: grid; grid-template-columns: 90px 1fr; gap: 12px; padding: 9px 0; border-top: 1px solid var(--ink-200); font-size: 14px; line-height: 1.45; color: var(--ink-700); }
+  .bs-rows b { font-family: var(--mono); font-size: 12px; color: #B5562E; padding-top: 2px; }
+  @media (max-width: 720px) { .bs-swatches { grid-template-columns: 1fr 1fr; } .bs-rows div { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* Modul 04: faktafil */
+  .fact-file { background: var(--ink-900); border-radius: 14px; padding: 18px 20px; font-family: var(--mono); }
+  .fig .fact-file p.ff-lab { font-size: 12px; color: var(--amber-400); margin: 0 0 10px; letter-spacing: 0.08em; }
+  .ff-row { display: flex; gap: 10px; align-items: baseline; font-size: 13px; line-height: 1.5; color: var(--cream-100); padding: 7px 0; border-top: 1px solid var(--ink-700); flex-wrap: wrap; }
+  .ff-row span { width: 16px; font-weight: 600; }
+  .ff-row.ok span { color: #8FBF8A; }
+  .ff-row.no span { color: var(--amber-400); }
+  .ff-row em { font-style: normal; color: var(--ink-400); font-size: 12px; margin-left: auto; }
+
+  /* Modul 05: grafiktyper */
+  .gfx-kinds { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .gk { background: var(--cream-50); border: 1px solid var(--ink-200); border-radius: 12px; padding: 14px; font-size: 13px; color: var(--ink-500); }
+  .gk b { display: block; font-family: var(--serif); font-size: 17px; color: var(--ink-900); margin-top: 12px; }
+  .gk-vis { height: 74px; border-radius: 8px; background: var(--amber-50); padding: 10px; display: flex; gap: 6px; }
+  .gk-vis.bars { flex-direction: column; justify-content: center; }
+  .gk-vis.bars i { display: block; height: 10px; border-radius: 5px; background: var(--amber-600); }
+  .gk-vis.flowv { align-items: center; justify-content: center; }
+  .gk-vis.flowv i { width: 22px; height: 22px; border-radius: 6px; background: var(--amber-600); }
+  .gk-vis.flowv s { text-decoration: none; color: var(--amber-700); font-size: 13px; }
+  .gk-vis.duo i { flex: 1; border-radius: 6px; }
+  .gk-vis.duo i.a { background: var(--ink-300); }
+  .gk-vis.duo i.b { background: var(--amber-600); }
+  .gk-vis.ui { flex-direction: column; background: #fff; border: 1px solid var(--ink-200); }
+  .gk-vis.ui i { display: block; height: 8px; border-radius: 4px; background: var(--ink-200); }
+  .gk-vis.ui i:first-child { width: 70%; background: var(--ink-700); }
+  .gk-vis.ui i.btn { width: 46%; height: 16px; margin-top: auto; background: var(--amber-600); border-radius: 5px; }
+  @media (max-width: 720px) { .gfx-kinds { grid-template-columns: 1fr 1fr; } }
+
+  /* Modul 07: avslutningens lager */
+  .end-stack { display: grid; gap: 10px; }
+  .es { border-radius: 12px; padding: 14px 18px; display: grid; grid-template-columns: 150px 1fr; gap: 14px; font-size: 14px; line-height: 1.45; }
+  .es b { font-family: var(--serif); font-size: 18px; }
+  .es1 { background: var(--ink-900); color: var(--cream-100); }
+  .es1 span { color: var(--ink-300); }
+  .es2 { background: var(--amber-600); color: #fff; }
+  .es3 { background: var(--cream-50); border: 1px solid var(--ink-200); color: var(--ink-700); }
+  .es4 { background: transparent; border: 1px dashed var(--amber-600); color: var(--ink-700); }
+  @media (max-width: 720px) { .es { grid-template-columns: 1fr; gap: 4px; } }
+</style>
+</head>
+
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="topbar">
+  <div class="container topbar-inner">
+    <a href="#top" class="brand">
+      <span class="brand-dot"></span>
+      Birgir Birgisson
+    </a>
+    <nav class="module-nav" aria-label="Moduler">
+      <a href="#mod1">01 Varför</a>
+      <a href="#mod2">02 Skillen</a>
+      <a href="#mod3">03 Brand</a>
+      <a href="#mod4">04 Innehåll</a>
+      <a href="#mod5">05 Grafik</a>
+      <a href="#mod6">06 Publicera</a>
+      <a href="#mod7">07 Avslutning</a>
+      <a href="#quiz">Quiz</a>
+    </nav>
+  </div>
+</div>
+
+<section class="hero" id="top">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <span class="badge">Mini-kurs på svenska</span>
+        <h1 class="hero-title">Bygg en <em class="serif-italic">minikurs</em> med Claude Code.</h1>
+        <p class="hero-sub">En skill, en brandfil och en idé. Sedan bygger Claude Code en färdig kurs med egna bilder, quiz och delningsbild, och lägger ut den på nätet. Så här är hela maskineriet uppbyggt, steg för steg.</p>
+        <p class="hero-tools"><strong>Det du behöver:</strong> Claude Code, ett GitHub-konto och ett Vercel-konto. Båda har gratisnivåer. Det enda som kostar är ditt Claude-abonnemang.</p>
+        <div class="hero-meta">
+          <span>7 moduler</span>
+          <span>~25 min</span>
+          <span>FRI</span>
+        </div>
+        <div class="module-tags">
+          <a href="#mod1"><span class="num">01</span>Varför minikurser</a>
+          <a href="#mod2"><span class="num">02</span>Skillen som recept</a>
+          <a href="#mod3"><span class="num">03</span>Brandfilen</a>
+          <a href="#mod4"><span class="num">04</span>Från idé till fakta</a>
+          <a href="#mod5"><span class="num">05</span>Grafiken</a>
+          <a href="#mod6"><span class="num">06</span>Granska och publicera</a>
+          <a href="#mod7"><span class="num">07</span>Avslutningen</a>
+        </div>
+      </div>
+      <div>
+        <div class="tree-card" aria-label="Exempel på en skill-mapp">
+          <p class="tc-title">min-minikurs/</p>
+          <div class="tc-row hot"><span class="tc-ico">◆</span>SKILL.md<em>receptet</em></div>
+          <div class="tc-row hot"><span class="tc-ico">◆</span>BRAND.md<em>utseende och ton</em></div>
+          <div class="tc-row"><span class="tc-ico">◇</span>config.json<em>inställningar</em></div>
+          <div class="tc-row"><span class="tc-ico">◇</span>GA-VIDARE.html<em>färdig del</em></div>
+          <div class="tc-row"><span class="tc-ico">◇</span>FAKTA.md<em>källorna</em></div>
+          <div class="tc-row out"><span class="tc-ico">→</span>index.html<em>kursen</em></div>
+        </div>
+        <p class="phone-cap">En skill är bara en mapp med text</p>
+      </div>
+    </div>
+    <div class="accent-bar"></div>
+  </div>
+</section>
+
+<!-- MODUL 01 -->
+<section class="module reveal" id="mod1">
+  <div class="container-narrow">
+    <p class="section-label">Modul 01</p>
+    <h2>Varför <em class="serif-italic">minikurser</em>.</h2>
+    <p class="lead">En minikurs är en enda webbsida som lär ut en sak ordentligt. Den är gratis, kräver ingen e-post och går att läsa på en kvart. Det är just därför den fungerar.</p>
+
+    <p>Ett inlägg i sociala medier lever i ett par dagar. En kurs ligger kvar. Den går att länka till i svar, i andra grupper och i nyhetsbrev, och den hittas i sökningar. Varje kurs du gör blir en ny ingång till det du erbjuder. Den som har fått något värdefullt av dig gratis är mycket mer benägen att vilja ha mer.</p>
+
+    <figure class="fig">
+      <div class="flow">
+        <div class="flow-step"><div class="n">01</div><h4>Fråga</h4><p>Något många undrar över, eller något du själv har lärt dig.</p></div>
+        <div class="flow-step"><div class="n">02</div><h4>Kurs</h4><p>Claude Code bygger en färdig minikurs på en eftermiddag.</p></div>
+        <div class="flow-step"><div class="n">03</div><h4>Inlägg</h4><p>Du berättar om kursen och länkar. Gratis, ingen e-post.</p></div>
+        <div class="flow-step"><div class="n">04</div><h4>Läsare</h4><p>De lär sig något på riktigt, i lugn och ro.</p></div>
+        <div class="flow-step last"><div class="n">05</div><h4>Nästa steg</h4><p>Nyhetsbrev, bok, betald kurs eller fler minikurser.</p></div>
+      </div>
+    </figure>
+
+    <div class="callout dark">
+      <p class="label">Nyckelinsikt</p>
+      <p>Det som gör minikurser hållbara är inte att varje kurs är perfekt. Det är att du kan göra dem ofta. Därför lönar det sig att lägga tiden på receptet, en gång, och sedan låta Claude Code följa det varje gång.</p>
+    </div>
+
+    <h3>Det som gör en bra minikurs</h3>
+    <ul class="check-list">
+      <li><strong>Ett ämne, inte fem.</strong> Hellre en sak förklarad ordentligt än allt du kan.</li>
+      <li><strong>Fristående.</strong> Kursen ska fungera för den som kommer från en länk utan sammanhang.</li>
+      <li><strong>Något att göra.</strong> Färdiga promptar att kopiera, ett quiz på slutet, ett första steg att ta i morgon.</li>
+      <li><strong>Samma utseende varje gång.</strong> Då känns varje ny kurs igen som din.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- MODUL 02 -->
+<section class="module alt reveal" id="mod2">
+  <div class="container-narrow">
+    <p class="section-label">Modul 02</p>
+    <h2>Skillen är <em class="serif-italic">receptet</em>.</h2>
+    <p class="lead">En skill är en mapp med instruktioner som Claude Code läser när den ska göra en viss sorts uppgift. Det är där all din erfarenhet samlas, så att du slipper förklara samma sak i varje ny session.</p>
+
+    <figure class="fig">
+      <div class="fig-card">
+        <div class="skill-map">
+          <div class="sm-core"><p class="sm-lab">SKILL.md</p><p>Steg för steg: vad Claude ska göra, i vilken ordning, och vilka regler som aldrig får brytas.</p></div>
+          <div class="sm-grid">
+            <div class="sm-item"><b>BRAND.md</b><span>Färger, typsnitt, ton, vad som är förbjudet.</span></div>
+            <div class="sm-item"><b>config.json</b><span>Länkar, nyhetsbrev, favicon och andra fasta värden.</span></div>
+            <div class="sm-item"><b>Färdiga delar</b><span>Avsnitt som ska se exakt likadana ut i varje kurs.</span></div>
+            <div class="sm-item"><b>Hjälpskript</b><span>Till exempel ett som hämtar text ur en video.</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><strong>En kärna och fyra stöttor.</strong> SKILL.md styr. De andra filerna är det den hänvisar till.</figcaption>
+    </figure>
+
+    <h3>Vad som står i SKILL.md</h3>
+    <ul class="check-list">
+      <li><strong>Målet.</strong> En fristående kurs som en enda HTML-fil, redo att lägga ut.</li>
+      <li><strong>Strukturen.</strong> Hjälte överst, ett antal moduler, ett quiz med tre frågor och en avslutning.</li>
+      <li><strong>Reglerna som aldrig bryts.</strong> Till exempel att kursen ska vara på svenska, att den aldrig hänvisar till källan den bygger på och att varje rubrik har ett betonat ord.</li>
+      <li><strong>Stegen.</strong> Läs brandfilen, föreslå en struktur, vänta på godkännande, bygg, granska, publicera.</li>
+      <li><strong>Var man stannar och frågar.</strong> Strukturen godkänns alltid av dig innan något byggs.</li>
+    </ul>
+
+    <div class="callout">
+      <p class="label">Receptet växer</p>
+      <p>En bra skill skrivs inte på en gång. Varje gång du rättar något i en kurs, be Claude föra in rättningen i SKILL.md. Efter tio kurser följer den ett recept som har lärt sig av alla tio.</p>
+    </div>
+
+    <div class="prompt-box">
+      <div class="ph"><span>Starta din egen skill</span><button type="button" class="copy" data-target="skillText">Kopiera</button></div>
+<pre id="skillText">Jag vill göra gratis minikurser, en kurs per webbsida, och vill att du bygger dem på samma sätt varje gång.
+
+Skapa en skill för det i den här mappen:
+1. SKILL.md med målet, strukturen (hjälte, moduler, quiz med tre frågor, avslutning), stegen och de regler som aldrig får brytas.
+2. BRAND.md där vi beskriver mitt utseende och min ton. Ställ frågor till mig om det du inte vet.
+3. config.json för fasta värden som länkar och nyhetsbrev.
+
+Föreslå innehållet i SKILL.md och fråga mig innan du skriver filerna.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- MODUL 03 -->
+<section class="module reveal" id="mod3">
+  <div class="container-narrow">
+    <p class="section-label">Modul 03</p>
+    <h2>Brandfilen gör den <em class="serif-italic">din</em>.</h2>
+    <p class="lead">Utan brandfil gissar Claude hur det ska se ut, och gissar olika varje gång. Med en brandfil får varje kurs dina färger, dina typsnitt och din röst, utan att du behöver säga det.</p>
+
+    <p>Exemplet här är påhittat, en liten keramikverkstad, men upplägget är detsamma som i en riktig brandfil. Det viktiga är att den är konkret. "Varm och personlig" säger nästan ingenting. "Skriv i du-form, inga utropstecken" går att följa.</p>
+
+    <figure class="fig">
+      <div class="fig-card">
+        <div class="brand-sheet">
+          <div class="bs-head"><p class="bs-lab">BRAND.md</p><p class="bs-name">Lerverket, keramik i Gamla stan</p></div>
+          <div class="bs-swatches">
+            <div class="sw" style="background:#F4EEE6"><span>Lera ljus<br>#F4EEE6</span></div>
+            <div class="sw" style="background:#2F3B34;color:#F4EEE6"><span>Skog<br>#2F3B34</span></div>
+            <div class="sw" style="background:#B5562E;color:#fff"><span>Bränd terrakotta<br>#B5562E</span></div>
+            <div class="sw" style="background:#D9C7A7"><span>Sand<br>#D9C7A7</span></div>
+          </div>
+          <div class="bs-rows">
+            <div><b>Typsnitt</b><span>Rubriker i Fraunces, brödtext i Inter.</span></div>
+            <div><b>Ton</b><span>Lugn, kunnig, du-form. Korta meningar. Som en hantverkare som visar hur man gör.</span></div>
+            <div><b>Signatur</b><span>Ett ord i varje rubrik i kursiv terrakotta.</span></div>
+            <div><b>Aldrig</b><span>Utropstecken, säljfloskler, mörkt läge, stockbilder.</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><strong>Ett påhittat exempel.</strong> Färger med exakta koder, typsnitt med namn, en ton som går att följa och en lista över vad som aldrig får förekomma.</figcaption>
+    </figure>
+
+    <h3>Fem saker varje brandfil ska innehålla</h3>
+    <ol class="step-list">
+      <li><div><h4>Färger med koder</h4><p>Inte "varm orange" utan en exakt färgkod, och vad varje färg används till.</p></div></li>
+      <li><div><h4>Typsnitt</h4><p>Ett för rubriker och ett för text. Gärna gratis typsnitt från Google Fonts.</p></div></li>
+      <li><div><h4>Tonen</h4><p>Hur du tilltalar läsaren, hur långa meningarna är och vad som känns fel.</p></div></li>
+      <li><div><h4>En signatur</h4><p>En liten sak som går igen överallt, så att man känner igen dig.</p></div></li>
+      <li><div><h4>Det förbjudna</h4><p>Listan över vad som aldrig får förekomma. Den är ofta den viktigaste.</p></div></li>
+    </ol>
+
+    <div class="prompt-box">
+      <div class="ph"><span>Bygg brandfilen från din sajt</span><button type="button" class="copy" data-target="brandText">Kopiera</button></div>
+<pre id="brandText">Titta på min webbplats: [din adress]
+
+Skriv en BRAND.md utifrån den: färger med exakta koder och vad de används till, typsnitt, ton, en återkommande signatur och en lista över vad som aldrig får förekomma.
+
+Var konkret, så att någon annan kan följa filen utan att se sajten. Visa förslaget innan du sparar.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- MODUL 04 -->
+<section class="module alt reveal" id="mod4">
+  <div class="container-narrow">
+    <p class="section-label">Modul 04</p>
+    <h2>Från idé till <em class="serif-italic">fakta</em>.</h2>
+    <p class="lead">Skillen ger formen. Innehållet måste komma någonstans ifrån. De bästa minikurserna börjar i en verklig fråga och vilar på källor som går att kontrollera.</p>
+
+    <h3>Tre källor till bra ämnen</h3>
+    <ul class="check-list">
+      <li><strong>Det folk frågar om.</strong> Samma fråga som dyker upp gång på gång i en grupp eller i mejlen är ett säkert tecken på att en kurs behövs.</li>
+      <li><strong>Det du själv just har lärt dig.</strong> Du minns fortfarande vad som var svårt, och det är precis det en nybörjare behöver.</li>
+      <li><strong>En video eller ett föredrag.</strong> Claude kan hämta texten och göra om den till en fristående kurs, utan att nämna källan.</li>
+    </ul>
+
+    <h3>Faktafilen</h3>
+    <p>Handlar kursen om något som ändras ofta, som ett verktyg, en tjänst eller regler, låt Claude börja med att läsa de officiella källorna och skriva en faktafil. Kursen får sedan bara påstå det som står i den. Det tar några minuter och skyddar dig mot det värsta som kan hända en kurs: att den lär ut något som inte stämmer.</p>
+
+    <figure class="fig">
+      <div class="fig-card">
+        <div class="fact-file">
+          <p class="ff-lab">FAKTA.md</p>
+          <div class="ff-row ok"><span>✓</span>Gränserna delas mellan chatten och Claude Code. <em>källa: support-artikel</em></div>
+          <div class="ff-row ok"><span>✓</span>/clear kostar ingenting. <em>källa: dokumentationen</em></div>
+          <div class="ff-row no"><span>?</span>Exakt antal meddelanden per fönster. <em>står inte, nämns inte</em></div>
+        </div>
+      </div>
+      <figcaption><strong>Det som inte går att belägga skrivs inte.</strong> Ett exempel ur en riktig faktafil: två bekräftade påståenden och ett som hölls utanför kursen.</figcaption>
+    </figure>
+
+    <div class="prompt-box">
+      <div class="ph"><span>Faktakoll först</span><button type="button" class="copy" data-target="factText">Kopiera</button></div>
+<pre id="factText">Innan du skriver kursen: läs de officiella källorna om [ämnet] och skriv en FAKTA.md.
+
+För varje påstående: vad som gäller och var det står. Markera det du inte kan bekräfta.
+
+Kursen får sedan bara påstå det som står i FAKTA.md.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- MODUL 05 -->
+<section class="module reveal" id="mod5">
+  <div class="container-narrow">
+    <p class="section-label">Modul 05</p>
+    <h2>Grafiken gör den <em class="serif-italic">levande</em>.</h2>
+    <p class="lead">En kurs med bara text är tung att läsa. Men du behöver inga AI-genererade bilder. Claude Code kan rita diagram, jämförelser och små gränssnitt direkt i kursens egen kod.</p>
+
+    <p>Det fungerar eftersom en webbsida kan rita. Med HTML, CSS och SVG kan Claude bygga flöden med pilar, staplar som visar storlek, kort som jämför två sätt och små skisser av hur något ser ut på skärmen. Allt i dina färger och dina typsnitt, och allt går att ändra med en mening.</p>
+
+    <figure class="fig">
+      <div class="fig-card">
+        <div class="gfx-kinds">
+          <div class="gk"><div class="gk-vis bars"><i style="width:30%"></i><i style="width:62%"></i><i style="width:90%"></i></div><b>Staplar</b><span>Visar att något växer</span></div>
+          <div class="gk"><div class="gk-vis flowv"><i></i><s>→</s><i></i><s>→</s><i></i></div><b>Flöden</b><span>Visar steg i ordning</span></div>
+          <div class="gk"><div class="gk-vis duo"><i class="a"></i><i class="b"></i></div><b>Jämförelser</b><span>Före och efter</span></div>
+          <div class="gk"><div class="gk-vis ui"><i></i><i></i><i class="btn"></i></div><b>Skisser</b><span>Hur något ser ut</span></div>
+        </div>
+      </div>
+      <figcaption><strong>Fyra sorters bilder Claude ritar själv.</strong> Den här bilden är också byggd på det sättet.</figcaption>
+    </figure>
+
+    <div class="ba">
+      <div class="before">
+        <div class="label">Vagt</div>
+        <code>Lägg till några bilder så att det blir snyggare.</code>
+      </div>
+      <div class="after">
+        <div class="label">Tydligt</div>
+        <code>Ge varje modul minst en egen bild, ritad i HTML eller SVG i brandfilens färger: ett diagram, en jämförelse eller en skiss som förklarar modulens viktigaste poäng. Inga AI-genererade bilder.</code>
+      </div>
+    </div>
+
+    <h3>Delningsbilden, på samma sätt</h3>
+    <p>Bilden som syns när någon delar länken, OG-bilden, kan byggas likadant. Claude gör en liten webbsida i exakt 1200 gånger 630 pixlar, öppnar den i en webbläsare som körs osynligt i bakgrunden och tar en skärmbild. Resultatet blir en delningsbild i kursens stil, med rätt rubrik, och den går att göra om på sekunder.</p>
+
+    <div class="prompt-box">
+      <div class="ph"><span>Delningsbild</span><button type="button" class="copy" data-target="ogText">Kopiera</button></div>
+<pre id="ogText">Bygg en OG-bild för kursen som en HTML-sida i exakt 1200 x 630 pixlar, i brandfilens färger och typsnitt: kursens rubrik, en kort underrad och en enkel bild som hör till ämnet.
+
+Ta en skärmbild av sidan med Chrome i bakgrunden, spara den som bilder/og.jpg och koppla in den i sidans meta-taggar med full adress.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- MODUL 06 -->
+<section class="module alt reveal" id="mod6">
+  <div class="container-narrow">
+    <p class="section-label">Modul 06</p>
+    <h2>Granska och <em class="serif-italic">publicera</em>.</h2>
+    <p class="lead">Claude Code kan titta på sitt eget arbete. Låt den göra det innan du gör det, så får du se en kurs där de vanligaste felen redan är borta.</p>
+
+    <h3>Låt Claude granska sig själv</h3>
+    <p>Be Claude öppna kursen i en webbläsare, ta skärmbilder av varje bild och varje avsnitt, både i datorstorlek och i mobilstorlek, och rätta det som ser fel ut. Typiska fynd är text som inte syns mot bakgrunden, tabeller som skärs av på mobilen och bilder som blir för små. Det är saker som är lätta att missa när man bara läser koden.</p>
+
+    <h3>Vägen ut på nätet</h3>
+    <figure class="fig">
+      <div class="flow">
+        <div class="flow-step"><div class="n">01</div><h4>GitHub</h4><p>Kursen sparas i ett eget repo. Claude skapar det och laddar upp.</p></div>
+        <div class="flow-step"><div class="n">02</div><h4>Vercel</h4><p>Hämtar kursen från GitHub och lägger ut den. Gratis för sånt här.</p></div>
+        <div class="flow-step"><div class="n">03</div><h4>Adress</h4><p>Egen underdomän, med en CNAME-post hos ditt webbhotell.</p></div>
+        <div class="flow-step last"><div class="n">04</div><h4>Automatik</h4><p>Varje ändring som laddas upp publiceras av sig själv.</p></div>
+      </div>
+    </figure>
+
+    <div class="callout">
+      <p class="label">Den enda biten du gör själv</p>
+      <p>DNS-posten hos webbhotellet. Hämta värdet från Vercels sida för domänen, under projektets inställningar, och lägg in det som en CNAME-post. Har du nyss försökt öppna adressen innan posten fanns kan din egen dator minnas att den inte fanns en stund. Andra ser den direkt.</p>
+    </div>
+
+    <div class="prompt-box">
+      <div class="ph"><span>Publicera</span><button type="button" class="copy" data-target="pubText">Kopiera</button></div>
+<pre id="pubText">Kursen är godkänd. Publicera den:
+1. Skapa ett publikt GitHub-repo och ladda upp.
+2. Skapa ett Vercel-projekt kopplat till repot och lägg ut kursen.
+3. Lägg till underdomänen [namn].[din-domän] i projektet och säg vilken CNAME-post jag ska lägga in hos mitt webbhotell.
+4. Kontrollera att sidan och delningsbilden svarar när adressen fungerar.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- MODUL 07 -->
+<section class="module reveal" id="mod7">
+  <div class="container-narrow">
+    <p class="section-label">Modul 07</p>
+    <h2>Avslutningen som <em class="serif-italic">leder vidare</em>.</h2>
+    <p class="lead">Den som har läst hela kursen är din varmaste läsare. Avslutningen avgör om det tar slut där, eller om det blir början på något mer.</p>
+
+    <figure class="fig">
+      <div class="fig-card">
+        <div class="end-stack">
+          <div class="es es1"><b>Klar</b><span>"Bra jobbat. Du tog dig igenom hela kursen." Och ett första steg att ta i morgon.</span></div>
+          <div class="es es2"><b>Gå vidare</b><span>Det du säljer, för den som vill längre. En bok, en kurs, en tjänst.</span></div>
+          <div class="es es3"><b>Nyhetsbrev</b><span>För den som vill höra mer från dig, men inte köpa något nu.</span></div>
+          <div class="es es4"><b>Fler minikurser</b><span>En länk till alla dina kurser. Nästa ingång är bara ett klick bort.</span></div>
+        </div>
+      </div>
+      <figcaption><strong>Fyra lager, i den ordningen.</strong> Först tack, sedan det som ger mest, sist det som håller kvar.</figcaption>
+    </figure>
+
+    <h3>Gör avslutningen till en färdig del</h3>
+    <p>Avslutningen ska se exakt likadan ut i varje kurs. Lägg därför Gå vidare och Fler minikurser som färdiga HTML-bitar i skillens mapp, och skriv i SKILL.md att de ska kopieras in oförändrade. Ändrar du ett pris eller en länk gör du det på ett ställe, och kan be Claude uppdatera alla gamla kurser i ett svep.</p>
+
+    <div class="callout dark">
+      <p class="label">Sammanfattning av hela kursen</p>
+      <p>Ett ämne som folk faktiskt undrar över. En skill som receptet och en brandfil som utseendet. Faktakoll innan något skrivs. Egna bilder ritade i kod. Granskning i dator och mobil. Ut på nätet via GitHub och Vercel. En avslutning som leder vidare. Och varje rättning tillbaka in i receptet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-section reveal" id="quiz">
+  <div class="container-narrow">
+    <p class="section-label">Quiz</p>
+    <h2 style="font-family:var(--serif); font-weight:600; font-size:clamp(32px,4vw,40px); line-height:1.15; margin:0 0 14px;">Tre frågor som testar det <em class="serif-italic">viktigaste</em>.</h2>
+    <p class="lead">Svara intuitivt. Inga poäng dras vid fel, du ser bara hur det ligger till.</p>
+
+    <div class="quiz">
+      <div class="qq" data-q="1" data-correct="2">
+        <div class="qq-num">FRÅGA 01</div>
+        <h3>Vad gör att varje ny kurs ser ut som dina andra?</h3>
+        <div class="qopts">
+          <button class="qopt" data-i="0">Att du beskriver utseendet noga i varje prompt</button>
+          <button class="qopt" data-i="1">Att du använder samma AI-modell varje gång</button>
+          <button class="qopt" data-i="2">En brandfil som skillen läser innan något byggs</button>
+          <button class="qopt" data-i="3">Att du kopierar den förra kursen och ändrar texten</button>
+        </div>
+        <div class="qfeedback">Rätt. Brandfilen beskriver färger, typsnitt, ton och det förbjudna en gång, och skillen läser den varje gång.</div>
+      </div>
+
+      <div class="qq" data-q="2" data-correct="0">
+        <div class="qq-num">FRÅGA 02</div>
+        <h3>Kursen handlar om ett verktyg som ändras ofta. Vad gör du först?</h3>
+        <div class="qopts">
+          <button class="qopt" data-i="0">Låter Claude läsa de officiella källorna och skriva en faktafil</button>
+          <button class="qopt" data-i="1">Skriver kursen ur minnet och rättar fel efter publiceringen</button>
+          <button class="qopt" data-i="2">Undviker konkreta råd så att inget kan bli fel</button>
+          <button class="qopt" data-i="3">Kopierar en artikel du har läst</button>
+        </div>
+        <div class="qfeedback">Rätt. Kursen får bara påstå det som står i faktafilen, och det som inte går att belägga skrivs inte.</div>
+      </div>
+
+      <div class="qq" data-q="3" data-correct="3">
+        <div class="qq-num">FRÅGA 03</div>
+        <h3>Hur får du bilder i kursen utan AI-genererade bilder?</h3>
+        <div class="qopts">
+          <button class="qopt" data-i="0">Du ritar dem själv i ett bildprogram</button>
+          <button class="qopt" data-i="1">Du köper stockbilder</button>
+          <button class="qopt" data-i="2">Kursen klarar sig bra utan bilder</button>
+          <button class="qopt" data-i="3">Claude ritar diagram och skisser i HTML och SVG, i dina färger</button>
+        </div>
+        <div class="qfeedback">Rätt. Bilderna blir en del av kursens kod och går att ändra med en mening. Samma teknik ger delningsbilden.</div>
+      </div>
+
+      <div class="quiz-score" id="quizScore">
+        <p class="num"><span id="scoreNum">0</span> av 3</p>
+        <p id="scoreText">Bra jobbat. Du har koll på principerna.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- END SECTION -->
+<section class="end">
+  <div class="container-narrow">
+    <p class="section-label">Klar</p>
+    <h2>Bra jobbat. Du tog dig igenom hela <em class="serif-italic">mini-kursen</em>.</h2>
+    <p class="lead">Nu vet du hur hela maskineriet hänger ihop. Börja med en enda sak: be Claude Code skapa din skill och din brandfil, och gör sedan din första kurs om något du nyss har lärt dig.</p>
+
+    <div class="next-steps">
+      <p class="section-label">Gå vidare</p>
+      <h3>När du vill bygga <em class="serif-italic">på riktigt</em></h3>
+      <p class="intro">Två steg till för dig som fått smak på det. Boken ger dig hela landskapet, Startkitet tar dig hands-on i Claude Code.</p>
+      <div class="offer-grid">
+        <div class="offer">
+          <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></div>
+          <p class="kicker">Boken · 99 kr</p>
+          <h4>Vibe coding, hela landskapet</h4>
+          <p>Första boken om vibe coding på svenska. Den kompletta guiden till att bygga webbappar, AI-verktyg och produkter med AI, från idé till live, utan traditionell programmering. PDF med gratis framtida uppdateringar.</p>
+          <a href="https://vibecodingsverige.se/boken" class="btn btn-amber" target="_blank" rel="noopener">Till boken</a>
+        </div>
+        <div class="offer warm">
+          <div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></div>
+          <p class="kicker">Betald kurs · 199 kr</p>
+          <h4>Vibe Coding Startkit</h4>
+          <p>Bygg riktiga webbappar med Claude Code, utan att kunna koda. 9 kapitel, 50 färdiga prompts och 4 checklistor som tar dig hela vägen från första prompten till en webbapp på riktigt. Engångsbetalning, livstidstillgång med alla framtida uppdateringar.</p>
+          <a href="https://vibe-coding-startkit.birgir.se/" class="btn btn-amber" target="_blank" rel="noopener">Öppna startkitet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="news-card">
+      <div class="eyebrow">Veckobrev</div>
+      <h3>Vill du tänka mer kring Claude Code, AI och <em class="serif-italic">vibe coding</em>?</h3>
+      <p class="desc">Kort, lågmält, på svenska. Ett mejl i veckan med tre sektioner som matchar tonen i den här kursen.</p>
+      <ul class="check-list">
+        <li>En personlig reflektion om AI och om att vara människa samtidigt</li>
+        <li>En konkret AI-insikt, ofta något testat i veckan i Claude Code</li>
+        <li>En 10-minuters mikroövning du kan göra direkt</li>
+      </ul>
+      <a href="https://veckobrev.birgir.se/" class="btn btn-amber">Prenumerera på veckobrevet</a>
+      <p class="micro">Under 5 minuters läsning. Inga skräpmejl. Du kan när som helst avregistrera dig.</p>
+    </div>
+  </div>
+
+  <div class="fk-wrap">
+    <div class="fk">
+      <div>
+        <p class="fk-label">Fler minikurser</p>
+        <h3 class="fk-title">Vill du lära dig <em>mer</em>?</h3>
+        <p class="fk-desc">Det finns fler korta, gratis kurser om AI på svenska. Claude Code, Cowork, Codex, bilder och mycket mer.</p>
+      </div>
+      <a class="fk-btn" href="https://vibecodingsverige.se/kurser" target="_blank" rel="noopener">Se alla kurser &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">© 2026 Birgir Birgisson</div>
+</footer>
+
+<script>
+  // Progress bar
+  function updateProgress() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    document.getElementById('progressBar').style.width = progress + '%';
+  }
+  window.addEventListener('scroll', updateProgress);
+  updateProgress();
+
+  // Reveal on scroll
+  var revealEls = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -10% 0px' });
+  revealEls.forEach(function(el) { io.observe(el); });
+
+  // Active module nav
+  var navLinks = document.querySelectorAll('.module-nav a');
+  var sections = Array.from(navLinks).map(function(a) {
+    var id = a.getAttribute('href').replace('#', '');
+    return document.getElementById(id);
+  }).filter(Boolean);
+  var navIo = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var id = entry.target.id;
+      var link = document.querySelector('.module-nav a[href="#' + id + '"]');
+      if (!link) return;
+      if (entry.isIntersecting) {
+        navLinks.forEach(function(a) { a.classList.remove('active'); });
+        link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(function(s) { navIo.observe(s); });
+
+  // Quiz logic
+  var quizState = { 1: null, 2: null, 3: null };
+
+  document.querySelectorAll('.qq').forEach(function(qq) {
+    var qNum = parseInt(qq.dataset.q, 10);
+    var correct = parseInt(qq.dataset.correct, 10);
+    var opts = qq.querySelectorAll('.qopt');
+    var feedback = qq.querySelector('.qfeedback');
+
+    opts.forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        if (quizState[qNum] !== null) return;
+        var i = parseInt(opt.dataset.i, 10);
+        quizState[qNum] = (i === correct);
+        opts.forEach(function(o) {
+          o.disabled = true;
+          var oi = parseInt(o.dataset.i, 10);
+          if (oi === correct) o.classList.add('correct');
+          else if (oi === i) o.classList.add('wrong');
+        });
+        feedback.classList.add('show');
+        checkScore();
+      });
+    });
+  });
+
+  function checkScore() {
+    var answered = Object.values(quizState).filter(function(v) { return v !== null; }).length;
+    if (answered < 3) return;
+    var correct = Object.values(quizState).filter(function(v) { return v === true; }).length;
+    var scoreEl = document.getElementById('quizScore');
+    document.getElementById('scoreNum').textContent = correct;
+    var msg;
+    if (correct === 3) msg = 'Full pott. Du har koll på allt det viktigaste.';
+    else if (correct === 2) msg = 'Bra. En liten detalj kvar att finslipa.';
+    else if (correct === 1) msg = 'Okej start. Skumma igenom modulerna en gång till.';
+    else msg = 'Inga problem. Det är därför du gick kursen. Läs gärna om modul 03 och 04.';
+    document.getElementById('scoreText').textContent = msg;
+    scoreEl.classList.add('show');
+    scoreEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Kopieringsknappar
+  document.querySelectorAll('.prompt-box button.copy').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var t = document.getElementById(btn.dataset.target).textContent;
+      navigator.clipboard.writeText(t).then(function() {
+        btn.textContent = 'Kopierad';
+        setTimeout(function() { btn.textContent = 'Kopiera'; }, 1800);
+      });
+    });
+  });
+</script>
+</body>
+</html>
